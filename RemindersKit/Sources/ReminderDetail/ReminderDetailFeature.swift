@@ -21,7 +21,7 @@ public struct ReminderDetailFeature {
         }
 
         public enum Delegate {
-            case reminderChanged(Reminder)
+            case onCompleteTapped(Reminder)
         }
 
         case view(ViewAction)
@@ -35,7 +35,7 @@ public struct ReminderDetailFeature {
                 switch viewAction {
                 case .completeButtonTapped:
                     state.reminder.isComplete.toggle()
-                    return .send(.delegate(.reminderChanged(state.reminder)))
+                    return .send(.delegate(.onCompleteTapped(state.reminder)))
                 }
             case .delegate:
                 return .none

@@ -24,6 +24,7 @@ public struct RemindersListFeature {
 
         public enum Delegate {
             case onReminderTapped(Reminder)
+            case onCompleteTapped(Reminder)
         }
 
         case view(ViewAction)
@@ -38,8 +39,12 @@ public struct RemindersListFeature {
                 case let .onReminderTapped(reminder):
                     return .send(.delegate(.onReminderTapped(reminder)))
                 case let .onCompleteTapped(id):
-                    state.reminders[id: id]?.isComplete.toggle()
-                    return .none
+                    guard var reminder = state.reminders[id: id] else {
+                        return .none
+                    }
+                    reminder.isComplete.toggle()
+                    state.reminders[id: id] = reminder
+                    return .send(.delegate(.onCompleteTapped(reminder)))
                 }
             case .delegate:
                 return .none

@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11595F7D2B349C76008CF82E /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 11595F7C2B349C76008CF82E /* AppFeature */; };
 		11AE94802B30835E00AF4424 /* RemindersApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11AE947F2B30835E00AF4424 /* RemindersApp.swift */; };
 		11AE94842B30835F00AF4424 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 11AE94832B30835F00AF4424 /* Assets.xcassets */; };
-		11AE94B02B31AEF200AF4424 /* AppFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 11AE94AF2B31AEF200AF4424 /* AppFeature */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,7 +24,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				11AE94B02B31AEF200AF4424 /* AppFeature in Frameworks */,
+				11595F7D2B349C76008CF82E /* AppFeature in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,7 +82,7 @@
 			);
 			name = Reminders;
 			packageProductDependencies = (
-				11AE94AF2B31AEF200AF4424 /* AppFeature */,
+				11595F7C2B349C76008CF82E /* AppFeature */,
 			);
 			productName = Reminders;
 			productReference = 11AE947C2B30835E00AF4424 /* Reminders.app */;
@@ -345,7 +345,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		11AE94AF2B31AEF200AF4424 /* AppFeature */ = {
+		11595F7C2B349C76008CF82E /* AppFeature */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppFeature;
 		};

@@ -33,6 +33,5 @@ public struct RemindersListView: View {
                 }
             }
         }
-        .navigationTitle("Reminders list")
     }
 }
