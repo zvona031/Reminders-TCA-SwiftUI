@@ -8,7 +8,7 @@ public struct RemindersListFeature {
     public init() {}
 
     @ObservableState
-    public struct State {
+    public struct State: Equatable {
         public var reminders: IdentifiedArrayOf<Reminder> = []
 
         public init(reminders: IdentifiedArrayOf<Reminder> = []) {
@@ -23,6 +23,7 @@ public struct RemindersListFeature {
             case onDeleteTapped(IndexSet)
         }
 
+        @CasePathable
         public enum Delegate {
             case onReminderTapped(Reminder)
             case onCompleteTapped(Reminder)

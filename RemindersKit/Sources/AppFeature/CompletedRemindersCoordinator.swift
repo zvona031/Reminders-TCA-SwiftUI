@@ -34,6 +34,7 @@ public struct CompletedRemindersCoordinator {
         public enum Delegate {
             case onCompleteTapped(Reminder)
             case onReminderChanged(Reminder)
+            case onDeleteTapped([Reminder.ID])
         }
 
         case destination(PresentationAction<Destination.Action>)
@@ -76,14 +77,18 @@ public struct CompletedRemindersCoordinator {
                     state.destination = nil
                     return .none
                 }
-            case let .remindersList(.delegate(.onReminderTapped(reminder))):
-                state.path.append(.detail(ReminderDetailFeature.State(reminder: reminder)))
-                return .none
-            case let .remindersList(.delegate(.onCompleteTapped(reminder))):
-                state.remindersList.reminders.remove(reminder)
-                return .send(.delegate(.onCompleteTapped(reminder)))
-            case .remindersList:
-                return .none
+            case let .remindersList(.delegate(delegateAction)):
+                switch delegateAction {
+                case let .onReminderTapped(reminder):
+                    state.path.append(.detail(ReminderDetailFeature.State(reminder: reminder)))
+                    return .none
+                case let .onCompleteTapped(reminder):
+                    state.remindersList.reminders.remove(reminder)
+                    return .send(.delegate(.onCompleteTapped(reminder)))
+                case let .onDeleteTapped(ids):
+                    return .send(.delegate(.onDeleteTapped(ids)))
+                }
+
             case let .path(.element(id: _, action: .detail(.delegate(.onCompleteTapped(changedReminder))))):
                 if changedReminder.isComplete {
                     state.remindersList.reminders.append(changedReminder)
@@ -91,7 +96,7 @@ public struct CompletedRemindersCoordinator {
                     state.remindersList.reminders.remove(changedReminder)
                 }
                 return .send(.delegate(.onCompleteTapped(changedReminder)))
-            case .path, .destination, .delegate:
+            case .remindersList, .path, .destination, .delegate:
                 return .none
             }
         }

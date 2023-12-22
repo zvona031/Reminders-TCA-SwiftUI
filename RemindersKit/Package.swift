@@ -19,7 +19,8 @@ let package = Package(
         .library(name: "ReminderForm",
                  targets: ["ReminderForm"]),
         .library(name: "ReminderDetail",
-                 targets: ["ReminderDetail"])
+                 targets: ["ReminderDetail"]),
+
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", branch: "observation-beta")
@@ -45,6 +46,16 @@ let package = Package(
         ]),
         .target(name: "ReminderDetail", dependencies: [
             "Domain",
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        ]),
+        .testTarget(name: "ReminderFormTests", dependencies: [
+            "Domain",
+            "ReminderForm",
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        ]),
+        .testTarget(name: "ReminderListTests", dependencies: [
+            "Domain",
+            "RemindersList",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         ])
     ]

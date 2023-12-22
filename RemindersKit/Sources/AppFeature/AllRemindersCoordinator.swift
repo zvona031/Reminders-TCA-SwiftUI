@@ -101,12 +101,10 @@ public struct AllRemindersCoordinator {
                 case let .onDeleteTapped(ids):
                     return .send(.delegate(.onDeleteTapped(ids)))
                 }
-            case .remindersList:
-                return .none
             case let .path(.element(id: _, action: .detail(.delegate(.onCompleteTapped(changedReminder))))):
                 state.remindersList.reminders[id: changedReminder.id] = changedReminder
                 return .send(.delegate(.onCompleteTapped(changedReminder)))
-            case .path, .destination, .delegate:
+            case .remindersList, .path, .destination, .delegate:
                 return .none
 
             }

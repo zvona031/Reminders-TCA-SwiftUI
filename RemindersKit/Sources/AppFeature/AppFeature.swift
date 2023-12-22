@@ -77,14 +77,21 @@ public struct AppFeature {
                     }
                     return .none
                 }
-
+            case let .completedReminders(.delegate(delegateAction)):
+                switch delegateAction {
+                case let .onCompleteTapped(reminder):
+                    state.allReminders.remindersList.reminders[id: reminder.id] = reminder
+                    return .none
+                case let .onReminderChanged(reminder):
+                    state.allReminders.remindersList.reminders[id: reminder.id] = reminder
+                    return .none
+                case let .onDeleteTapped(ids):
+                    for id in ids {
+                        state.allReminders.remindersList.reminders.remove(id: id)
+                    }
+                    return .none
+                }
             case .allReminders:
-                return .none
-            case let .completedReminders(.delegate(.onReminderChanged(reminder))):
-                state.allReminders.remindersList.reminders[id: reminder.id] = reminder
-                return .none
-            case let .completedReminders(.delegate(.onCompleteTapped(reminder))):
-                state.allReminders.remindersList.reminders[id: reminder.id] = reminder
                 return .none
             case .completedReminders:
                 return .none
