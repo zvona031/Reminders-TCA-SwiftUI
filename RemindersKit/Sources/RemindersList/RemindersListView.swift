@@ -30,7 +30,9 @@ public struct RemindersListView: View {
                     .onTapGesture {
                         send(.onReminderTapped(reminder))
                     }
-                }
+                }.onDelete(perform: { indexSet in
+                    send(.onDeleteTapped(indexSet))
+                })
             }
         }
     }

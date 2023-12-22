@@ -20,11 +20,13 @@ public struct RemindersListFeature {
         public enum ViewAction {
             case onReminderTapped(Reminder)
             case onCompleteTapped(Reminder.ID)
+            case onDeleteTapped(IndexSet)
         }
 
         public enum Delegate {
             case onReminderTapped(Reminder)
             case onCompleteTapped(Reminder)
+            case onDeleteTapped([Reminder.ID])
         }
 
         case view(ViewAction)
@@ -45,6 +47,10 @@ public struct RemindersListFeature {
                     reminder.isComplete.toggle()
                     state.reminders[id: id] = reminder
                     return .send(.delegate(.onCompleteTapped(reminder)))
+                case let .onDeleteTapped(indexSet):
+                    let ids = indexSet.map { state.reminders.elements[$0].id }
+                    state.reminders.remove(atOffsets: indexSet)
+                    return .send(.delegate(.onDeleteTapped(ids)))
                 }
             case .delegate:
                 return .none

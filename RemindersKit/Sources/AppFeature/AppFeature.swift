@@ -57,18 +57,27 @@ public struct AppFeature {
 
         Reduce<State, Action> { state, action in
             switch action {
-            case let .allReminders(.delegate(.onCompleteTapped(reminder))):
-                if reminder.isComplete {
-                    state.completedReminders.remindersList.reminders.append(reminder)
-                } else {
-                    state.completedReminders.remindersList.reminders.remove(reminder)
+            case let .allReminders(.delegate(delegateAction)):
+                switch delegateAction {
+                case let .onReminderChanged(reminder):
+                    if state.completedReminders.remindersList.reminders[id: reminder.id] != nil {
+                        state.completedReminders.remindersList.reminders[id: reminder.id] = reminder
+                    }
+                    return .none
+                case let .onCompleteTapped(reminder):
+                    if reminder.isComplete {
+                        state.completedReminders.remindersList.reminders.insert(reminder, at: 0)
+                    } else {
+                        state.completedReminders.remindersList.reminders.remove(reminder)
+                    }
+                    return .none
+                case let .onDeleteTapped(ids):
+                    for id in ids {
+                        state.completedReminders.remindersList.reminders.remove(id: id)
+                    }
+                    return .none
                 }
-                return .none
-            case let .allReminders(.delegate(.onReminderChanged(reminder))):
-                if state.completedReminders.remindersList.reminders[id: reminder.id] != nil {
-                    state.completedReminders.remindersList.reminders[id: reminder.id] = reminder
-                }
-                return .none
+
             case .allReminders:
                 return .none
             case let .completedReminders(.delegate(.onReminderChanged(reminder))):

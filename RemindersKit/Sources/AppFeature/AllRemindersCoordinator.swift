@@ -3,6 +3,7 @@ import RemindersList
 import ReminderDetail
 import ReminderForm
 import Domain
+import Foundation
 
 @Reducer
 public struct AllRemindersCoordinator {
@@ -37,6 +38,7 @@ public struct AllRemindersCoordinator {
         public enum Delegate {
             case onReminderChanged(Reminder)
             case onCompleteTapped(Reminder)
+            case onDeleteTapped([Reminder.ID])
         }
 
         case destination(PresentationAction<Destination.Action>)
@@ -89,11 +91,16 @@ public struct AllRemindersCoordinator {
                     state.destination = nil
                     return .none
                 }
-            case let .remindersList(.delegate(.onReminderTapped(reminder))):
-                state.path.append(.detail(ReminderDetailFeature.State(reminder: reminder)))
-                return .none
-            case let .remindersList(.delegate(.onCompleteTapped(reminder))):
-                return .send(.delegate(.onCompleteTapped(reminder)))
+            case let .remindersList(.delegate(delegateAction)):
+                switch delegateAction {
+                case let .onReminderTapped(reminder):
+                    state.path.append(.detail(ReminderDetailFeature.State(reminder: reminder)))
+                    return .none
+                case let .onCompleteTapped(reminder):
+                    return .send(.delegate(.onCompleteTapped(reminder)))
+                case let .onDeleteTapped(ids):
+                    return .send(.delegate(.onDeleteTapped(ids)))
+                }
             case .remindersList:
                 return .none
             case let .path(.element(id: _, action: .detail(.delegate(.onCompleteTapped(changedReminder))))):
