@@ -63,7 +63,7 @@ public struct AllRemindersView: View {
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
-                            send(.saveEditReminderTapped(store.state.reminder))
+                            send(.saveEditReminderTapped)
                         } label: {
                             Text("Edit")
                         }
@@ -89,7 +89,7 @@ public struct AllRemindersView: View {
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
-                            send(.saveAddReminderTapped(store.state.reminder))
+                            send(.saveAddReminderTapped)
                         } label: {
                             Text("Save")
                         }

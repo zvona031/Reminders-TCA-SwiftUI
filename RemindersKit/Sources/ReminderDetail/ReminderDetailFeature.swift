@@ -7,7 +7,7 @@ public struct ReminderDetailFeature {
     public init() {}
 
     @ObservableState
-    public struct State {
+    public struct State: Equatable {
         public var reminder: Reminder
 
         public init(reminder: Reminder) {

@@ -57,6 +57,14 @@ let package = Package(
             "Domain",
             "RemindersList",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
+        ]),
+        .testTarget(name: "AllRemindersCoordinatorTests", dependencies: [
+            "Domain",
+            "RemindersList",
+            "ReminderDetail",
+            "ReminderForm",
+            "AppFeature",
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture"),
         ])
     ]
 )

@@ -11,10 +11,10 @@ public struct AllRemindersCoordinator {
     public init() {}
 
     @ObservableState
-    public struct State {
-        @Presents var destination: Destination.State? = nil
-        var path = StackState<PathFeature.State>()
-        var remindersList = RemindersListFeature.State()
+    public struct State: Equatable {
+        @Presents public var destination: Destination.State? = nil
+        public var path = StackState<PathFeature.State>()
+        public var remindersList = RemindersListFeature.State()
 
         public init(destination: Destination.State? = nil,
              path: StackState<PathFeature.State> = StackState<PathFeature.State>(),
@@ -28,10 +28,11 @@ public struct AllRemindersCoordinator {
     public enum Action: ViewAction {
         public enum ViewAction {
             case addButtonTapped
-            case saveAddReminderTapped(Reminder)
+            case saveAddReminderTapped
+            case saveAddReminderTappedd(Reminder)
             case cancelAddReminderTapped
             case editButtonTapped(Reminder)
-            case saveEditReminderTapped(Reminder)
+            case saveEditReminderTapped
             case cancelEditReminderTapped
         }
 
@@ -65,7 +66,11 @@ public struct AllRemindersCoordinator {
                     let newReminder = Reminder(id: uuid(), title: "", note: "")
                     state.destination = .addReminder(ReminderFormFeature.State(reminder: newReminder))
                     return .none
-                case let .saveAddReminderTapped(newReminder):
+                case let .saveAddReminderTappedd(reminder):
+                    return .none
+                case .saveAddReminderTapped:
+                    guard let newReminder = state.destination?.addReminder?.reminder else { return .none }
+
                     state.remindersList.reminders.append(newReminder)
                     state.destination = nil
                     return .none
@@ -75,7 +80,8 @@ public struct AllRemindersCoordinator {
                 case let .editButtonTapped(reminder):
                     state.destination = .editReminder(ReminderFormFeature.State(reminder: reminder))
                     return .none
-                case let .saveEditReminderTapped(editedReminder):
+                case .saveEditReminderTapped:
+                    guard let editedReminder = state.destination?[case: \.editReminder]?.reminder else { return .none }
                     state.remindersList.reminders[id: editedReminder.id] = editedReminder
 
                     for (id, element) in zip(state.path.ids, state.path) {
@@ -122,7 +128,7 @@ extension AllRemindersCoordinator {
     @Reducer
     public struct Destination {
         @ObservableState
-        public enum State {
+        public enum State: Equatable {
             case editReminder(ReminderFormFeature.State)
             case addReminder(ReminderFormFeature.State)
         }
@@ -152,7 +158,7 @@ extension AllRemindersCoordinator {
         public init() {}
 
         @ObservableState
-        public enum State {
+        public enum State: Equatable {
             case detail(ReminderDetailFeature.State)
         }
 
