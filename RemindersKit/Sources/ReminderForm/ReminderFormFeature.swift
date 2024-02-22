@@ -3,7 +3,6 @@ import Domain
 
 @Reducer
 public struct ReminderFormFeature {
-
     public init() {}
 
     @ObservableState
@@ -21,8 +20,6 @@ public struct ReminderFormFeature {
 
     public var body: some ReducerOf<Self> {
         BindingReducer()
-        Reduce { state, action in
-            return .none
-        }
+        EmptyReducer()
     }
 }

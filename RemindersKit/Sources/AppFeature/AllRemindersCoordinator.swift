@@ -7,18 +7,19 @@ import Foundation
 
 @Reducer
 public struct AllRemindersCoordinator {
-
     public init() {}
 
     @ObservableState
     public struct State: Equatable {
-        @Presents public var destination: Destination.State? = nil
+        @Presents public var destination: Destination.State?
         public var path = StackState<PathFeature.State>()
         public var remindersList = RemindersListFeature.State()
 
-        public init(destination: Destination.State? = nil,
-             path: StackState<PathFeature.State> = StackState<PathFeature.State>(),
-             remindersList: RemindersListFeature.State = RemindersListFeature.State()) {
+        public init(
+            destination: Destination.State? = nil,
+            path: StackState<PathFeature.State> = StackState<PathFeature.State>(),
+            remindersList: RemindersListFeature.State = RemindersListFeature.State()
+        ) {
             self.destination = destination
             self.path = path
             self.remindersList = remindersList
@@ -66,7 +67,9 @@ public struct AllRemindersCoordinator {
                     state.destination = .addReminder(ReminderFormFeature.State(reminder: newReminder))
                     return .none
                 case .saveAddReminderTapped:
-                    guard let newReminder = state.destination?.addReminder?.reminder else { return .none }
+                    guard let newReminder = state.destination?.addReminder?.reminder else {
+                        return .none
+                    }
 
                     state.remindersList.reminders.append(newReminder)
                     state.destination = nil
@@ -78,7 +81,9 @@ public struct AllRemindersCoordinator {
                     state.destination = .editReminder(ReminderFormFeature.State(reminder: reminder))
                     return .none
                 case .saveEditReminderTapped:
-                    guard let editedReminder = state.destination?[case: \.editReminder]?.reminder else { return .none }
+                    guard let editedReminder = state.destination?[case: \.editReminder]?.reminder else {
+                        return .none
+                    }
                     state.remindersList.reminders[id: editedReminder.id] = editedReminder
 
                     for (id, element) in zip(state.path.ids, state.path) {
@@ -109,7 +114,6 @@ public struct AllRemindersCoordinator {
                 return .send(.delegate(.onCompleteTapped(changedReminder)))
             case .remindersList, .path, .destination, .delegate:
                 return .none
-
             }
         }
         .forEach(\.path, action: \.path)

@@ -42,14 +42,13 @@ public struct CompletedRemindersView: View {
         NavigationStack {
             ReminderFormView(store: store)
                 .navigationTitle("Edit reminder")
-                .toolbar(content: {
+                .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             send(.cancelEditReminderTapped)
                         } label: {
                             Text("Cancel")
                         }
-
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
@@ -57,9 +56,8 @@ public struct CompletedRemindersView: View {
                         } label: {
                             Text("Edit")
                         }
-
                     }
-                })
+                }
         }
     }
 

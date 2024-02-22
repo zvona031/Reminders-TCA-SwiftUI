@@ -59,7 +59,6 @@ public struct AllRemindersView: View {
                         } label: {
                             Text("Cancel")
                         }
-
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
@@ -67,7 +66,6 @@ public struct AllRemindersView: View {
                         } label: {
                             Text("Edit")
                         }
-
                     }
                 }
         }
@@ -85,7 +83,6 @@ public struct AllRemindersView: View {
                         } label: {
                             Text("Cancel")
                         }
-
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
@@ -93,7 +90,6 @@ public struct AllRemindersView: View {
                         } label: {
                             Text("Save")
                         }
-
                     }
                 }
         }

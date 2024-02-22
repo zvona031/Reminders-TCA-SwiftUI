@@ -1,7 +1,6 @@
 import SwiftUI
 import ComposableArchitecture
 
-
 @ViewAction(for: RemindersListFeature.self)
 public struct RemindersListView: View {
     @Perception.Bindable public var store: StoreOf<RemindersListFeature>
@@ -30,9 +29,9 @@ public struct RemindersListView: View {
                     .onTapGesture {
                         send(.onReminderTapped(reminder))
                     }
-                }.onDelete(perform: { indexSet in
+                }.onDelete { indexSet in
                     send(.onDeleteTapped(indexSet))
-                })
+                }
             }
         }
     }

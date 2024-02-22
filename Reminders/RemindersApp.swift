@@ -21,10 +21,10 @@ struct RemindersApp: App {
                                 ]
                             )
                         )
-                    ),
-                    reducer: {
-                        AppFeature()
-                    })
+                    )
+                ) {
+                    AppFeature()
+                }
             )
         }
     }

@@ -11,7 +11,6 @@ public enum Tab {
 
 @Reducer
 public struct AppFeature {
-
     public init() {}
 
     @ObservableState
@@ -20,9 +19,11 @@ public struct AppFeature {
         var allReminders = AllRemindersCoordinator.State()
         var completedReminders = CompletedRemindersCoordinator.State()
 
-        public init(selectedTab: Tab = .allReminders,
-             allReminders: AllRemindersCoordinator.State = AllRemindersCoordinator.State(),
-             completedReminders: CompletedRemindersCoordinator.State = CompletedRemindersCoordinator.State()) {
+        public init(
+            selectedTab: Tab = .allReminders,
+            allReminders: AllRemindersCoordinator.State = AllRemindersCoordinator.State(),
+            completedReminders: CompletedRemindersCoordinator.State = CompletedRemindersCoordinator.State()
+        ) {
             self.selectedTab = selectedTab
             self.allReminders = allReminders
             self.completedReminders = completedReminders
@@ -31,7 +32,6 @@ public struct AppFeature {
 
     public enum Action: ViewAction, BindableAction {
         public enum ViewAction {}
-        
 
         case allReminders(AllRemindersCoordinator.Action)
         case completedReminders(CompletedRemindersCoordinator.Action)

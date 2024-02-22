@@ -3,7 +3,6 @@ import Domain
 
 @Reducer
 public struct ReminderDetailFeature {
-
     public init() {}
 
     @ObservableState
@@ -40,7 +39,6 @@ public struct ReminderDetailFeature {
             case .delegate:
                 return .none
             }
-
         }
     }
 }

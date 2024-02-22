@@ -5,14 +5,14 @@ import XCTest
 
 @MainActor
 final class ReminderListTests: XCTestCase {
-
     func test_remindersList_completeReminderTap() async {
         let reminder = Reminder(title: "Title", note: "Note", isComplete: false)
         let store = TestStore(
             initialState: RemindersListFeature.State(
                 reminders: [
                     reminder
-                ])
+                ]
+            )
         ) {
             RemindersListFeature()
         }
@@ -38,12 +38,13 @@ final class ReminderListTests: XCTestCase {
                 reminders: [
                     reminder1,
                     reminder2
-                ])
+                ]
+            )
         ) {
             RemindersListFeature()
         }
 
-        await store.send(.view(.onDeleteTapped(IndexSet(arrayLiteral: 0)))) {
+        await store.send(.view(.onDeleteTapped(IndexSet(integer: 0)))) {
             $0.reminders.remove(id: reminder1.id)
         }
 

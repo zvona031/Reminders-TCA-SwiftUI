@@ -13,7 +13,6 @@ public struct ReminderFormView: View {
             Form {
                 Section {
                     TextField("Title", text: $store.reminder.title)
-
                 } header: {
                     Text("Info")
                 }

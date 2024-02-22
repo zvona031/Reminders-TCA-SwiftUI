@@ -1,4 +1,3 @@
-
 import ComposableArchitecture
 import AppFeature
 import XCTest
@@ -9,16 +8,14 @@ import Domain
 
 @MainActor
 final class AllRemindersCoordinatorTests: XCTestCase {
-
     func test_addNewReminder() async {
-        let store = TestStore(
-            initialState: AllRemindersCoordinator.State()) {
+        let store = TestStore(initialState: AllRemindersCoordinator.State()) {
             AllRemindersCoordinator()
-            } withDependencies: {
-                $0.uuid = .incrementing
-            }
+        } withDependencies: {
+            $0.uuid = .incrementing
+        }
 
-        let newReminder = Reminder(id: UUID(0),title: "", note: "", isComplete: false)
+        let newReminder = Reminder(id: UUID(0), title: "", note: "", isComplete: false)
         await store.send(.view(.addButtonTapped)) { state in
             state.destination = .addReminder(ReminderFormFeature.State(reminder: newReminder))
         }

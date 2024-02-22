@@ -6,18 +6,19 @@ import Domain
 
 @Reducer
 public struct CompletedRemindersCoordinator {
-
     public init() {}
 
     @ObservableState
     public struct State {
-        @Presents var destination: Destination.State? = nil
+        @Presents var destination: Destination.State?
         var path = StackState<PathFeature.State>()
         var remindersList = RemindersListFeature.State()
 
-        public init(destination: Destination.State? = nil,
-             path: StackState<PathFeature.State> = StackState<PathFeature.State>(),
-             remindersList: RemindersListFeature.State = RemindersListFeature.State()) {
+        public init(
+            destination: Destination.State? = nil,
+            path: StackState<PathFeature.State> = StackState<PathFeature.State>(),
+            remindersList: RemindersListFeature.State = RemindersListFeature.State()
+        ) {
             self.destination = destination
             self.path = path
             self.remindersList = remindersList

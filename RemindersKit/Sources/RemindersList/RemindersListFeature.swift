@@ -4,7 +4,6 @@ import Domain
 
 @Reducer
 public struct RemindersListFeature {
-
     public init() {}
 
     @ObservableState
@@ -57,6 +56,5 @@ public struct RemindersListFeature {
                 return .none
             }
         }
-
     }
 }
