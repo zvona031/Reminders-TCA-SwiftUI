@@ -36,6 +36,7 @@ public struct AllRemindersCoordinator {
             case cancelEditReminderTapped
         }
 
+        @CasePathable
         public enum Delegate {
             case onReminderChanged(Reminder)
             case onCompleteTapped(Reminder)
