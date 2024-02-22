@@ -29,7 +29,6 @@ public struct AllRemindersCoordinator {
         public enum ViewAction {
             case addButtonTapped
             case saveAddReminderTapped
-            case saveAddReminderTappedd(Reminder)
             case cancelAddReminderTapped
             case editButtonTapped(Reminder)
             case saveEditReminderTapped
@@ -65,8 +64,6 @@ public struct AllRemindersCoordinator {
                     @Dependency(\.uuid) var uuid
                     let newReminder = Reminder(id: uuid(), title: "", note: "")
                     state.destination = .addReminder(ReminderFormFeature.State(reminder: newReminder))
-                    return .none
-                case let .saveAddReminderTappedd(reminder):
                     return .none
                 case .saveAddReminderTapped:
                     guard let newReminder = state.destination?.addReminder?.reminder else { return .none }
@@ -115,61 +112,22 @@ public struct AllRemindersCoordinator {
 
             }
         }
-        .forEach(\.path, action: \.path) {
-            PathFeature()
-          }
-        .ifLet(\.$destination, action: \.destination) {
-            Destination()
-        }
+        .forEach(\.path, action: \.path)
+        .ifLet(\.$destination, action: \.destination)
     }
 }
 
 extension AllRemindersCoordinator {
-    @Reducer
-    public struct Destination {
-        @ObservableState
-        public enum State: Equatable {
-            case editReminder(ReminderFormFeature.State)
-            case addReminder(ReminderFormFeature.State)
-        }
-
-        public enum Action {
-            case editReminder(ReminderFormFeature.Action)
-            case addReminder(ReminderFormFeature.Action)
-        }
-
-        public var body: some ReducerOf<Self> {
-            Scope(state: \.editReminder, action: \.editReminder) {
-                ReminderFormFeature()
-            }
-            Scope(state: \.addReminder, action: \.addReminder) {
-                ReminderFormFeature()
-            }
-        }
-
-
+    @Reducer(state: .equatable)
+    public enum Destination {
+        case editReminder(ReminderFormFeature)
+        case addReminder(ReminderFormFeature)
     }
 }
 
 extension AllRemindersCoordinator {
-    @Reducer
-    public struct PathFeature {
-
-        public init() {}
-
-        @ObservableState
-        public enum State: Equatable {
-            case detail(ReminderDetailFeature.State)
-        }
-
-        public enum Action {
-            case detail(ReminderDetailFeature.Action)
-        }
-
-        public var body: some ReducerOf<Self> {
-            Scope(state: \.detail, action: \.detail) {
-                ReminderDetailFeature()
-            }
-        }
+    @Reducer(state: .equatable)
+    public enum PathFeature {
+        case detail(ReminderDetailFeature)
     }
 }

@@ -100,56 +100,21 @@ public struct CompletedRemindersCoordinator {
                 return .none
             }
         }
-        .forEach(\.path, action: \.path) {
-            PathFeature()
-          }
-        .ifLet(\.$destination, action: \.destination) {
-            Destination()
-        }
+        .forEach(\.path, action: \.path)
+        .ifLet(\.$destination, action: \.destination)
     }
 }
 
 extension CompletedRemindersCoordinator {
-    @Reducer
-    public struct Destination {
-        @ObservableState
-        public enum State {
-            case editReminder(ReminderFormFeature.State)
-        }
-
-        public enum Action {
-            case editReminder(ReminderFormFeature.Action)
-        }
-
-        public var body: some ReducerOf<Self> {
-            Scope(state: \.editReminder, action: \.editReminder) {
-                ReminderFormFeature()
-            }
-        }
-
-
+    @Reducer(state: .equatable)
+    public enum Destination {
+        case editReminder(ReminderFormFeature)
     }
 }
 
 extension CompletedRemindersCoordinator {
-    @Reducer
-    public struct PathFeature {
-
-        public init() {}
-
-        @ObservableState
-        public enum State {
-            case detail(ReminderDetailFeature.State)
-        }
-
-        public enum Action {
-            case detail(ReminderDetailFeature.Action)
-        }
-
-        public var body: some ReducerOf<Self> {
-            Scope(state: \.detail, action: \.detail) {
-                ReminderDetailFeature()
-            }
-        }
+    @Reducer(state: .equatable)
+    public enum PathFeature {
+        case detail(ReminderDetailFeature)
     }
 }

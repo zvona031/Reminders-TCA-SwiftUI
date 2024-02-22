@@ -4,7 +4,7 @@ import ComposableArchitecture
 
 @ViewAction(for: RemindersListFeature.self)
 public struct RemindersListView: View {
-    @BindableStore public var store: StoreOf<RemindersListFeature>
+    @Perception.Bindable public var store: StoreOf<RemindersListFeature>
 
     public init(store: StoreOf<RemindersListFeature>) {
         self.store = store

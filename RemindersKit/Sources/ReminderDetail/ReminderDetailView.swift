@@ -3,7 +3,7 @@ import SwiftUI
 
 @ViewAction(for: ReminderDetailFeature.self)
 public struct ReminderDetailView: View {
-    @BindableStore public var store: StoreOf<ReminderDetailFeature>
+    @Perception.Bindable public var store: StoreOf<ReminderDetailFeature>
 
     public init(store: StoreOf<ReminderDetailFeature>) {
         self.store = store
@@ -19,8 +19,6 @@ public struct ReminderDetailView: View {
                         send(.completeButtonTapped)
                     }
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationTitle(store.reminder.title)
         }
     }
 }

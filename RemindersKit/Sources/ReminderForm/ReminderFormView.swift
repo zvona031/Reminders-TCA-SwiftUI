@@ -2,7 +2,7 @@ import SwiftUI
 import ComposableArchitecture
 
 public struct ReminderFormView: View {
-    @BindableStore var store: StoreOf<ReminderFormFeature>
+    @Perception.Bindable var store: StoreOf<ReminderFormFeature>
 
     public init(store: StoreOf<ReminderFormFeature>) {
         self.store = store

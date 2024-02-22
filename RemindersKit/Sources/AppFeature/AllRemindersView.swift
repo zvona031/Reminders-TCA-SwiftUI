@@ -7,7 +7,7 @@ import ReminderForm
 
 @ViewAction(for: AllRemindersCoordinator.self)
 public struct AllRemindersView: View {
-    @BindableStore public var store: StoreOf<AllRemindersCoordinator>
+    @Perception.Bindable public var store: StoreOf<AllRemindersCoordinator>
 
     public init(store: StoreOf<AllRemindersCoordinator>) {
         self.store = store
@@ -18,9 +18,9 @@ public struct AllRemindersView: View {
             NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
                 root()
             } destination: { store in
-                switch store.state {
-                case .detail:
-                    reminderDetailView(store: store)
+                switch store.case {
+                case let .detail(detailStore):
+                    reminderDetailView(detailStore: detailStore)
                 }
             }
         }
@@ -32,13 +32,13 @@ public struct AllRemindersView: View {
             store: self.store.scope(state: \.remindersList, action: \.remindersList )
         )
         .navigationTitle("All reminders")
-        .toolbar(content: {
+        .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button("Add") {
                     send(.addButtonTapped)
                 }
             }
-        })
+        }
         .sheet(item: $store.scope(state: \.destination?.editReminder, action: \.destination.editReminder)) { store in
             editReminderFormView(store: store)
         }
@@ -52,7 +52,7 @@ public struct AllRemindersView: View {
         NavigationStack {
             ReminderFormView(store: store)
                 .navigationTitle("Edit reminder")
-                .toolbar(content: {
+                .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             send(.cancelEditReminderTapped)
@@ -69,7 +69,7 @@ public struct AllRemindersView: View {
                         }
 
                     }
-                })
+                }
         }
     }
 
@@ -78,7 +78,7 @@ public struct AllRemindersView: View {
         NavigationStack {
             ReminderFormView(store: store)
                 .navigationTitle("New reminder")
-                .toolbar(content: {
+                .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             send(.cancelAddReminderTapped)
@@ -95,40 +95,22 @@ public struct AllRemindersView: View {
                         }
 
                     }
-                })
+                }
         }
     }
 
     @ViewBuilder
-    func reminderDetailView(store: StoreOf<AllRemindersCoordinator.PathFeature>) -> some View {
-        if let store = store.scope(state: \.detail, action: \.detail) {
-            ReminderDetailView(store: store)
-                .toolbar(content: {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button("Edit") {
-                            send(.editButtonTapped(store.state.reminder))
-                        }
+    func reminderDetailView(detailStore: StoreOf<ReminderDetailFeature>) -> some View {
+        ReminderDetailView(store: detailStore)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Edit") {
+                        send(.editButtonTapped(detailStore.state.reminder))
                     }
-                })
-                .toolbar(.hidden, for: .tabBar)
-        }
+                }
+            }
+            .toolbar(.hidden, for: .tabBar)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle(detailStore.state.reminder.title)
     }
 }
-//
-//#Preview {
-//    AppView(
-//        store: Store(initialState: AppFeature.State(
-//            path: StackState([
-//                .detail(ReminderDetailFeature.State(reminder: Reminder(id: UUID(), title: "Naslov", note: "Note je malo duzi nego sto je bilo ocekivano pa ide u tri reda cak stvarno", isComplete: true)))
-//            ]),
-//            remindersList: RemindersListFeature.State(
-//                reminders: [
-//                    Reminder(id: UUID(), title: "Naslov", note: "Note je malo duzi nego sto je bilo ocekivano pa ide u tri reda cak stvarno", isComplete: true)
-//                ]
-//            )
-//        ),
-//                     reducer: {
-//            AppFeature()
-//        })
-//    )
-//}
