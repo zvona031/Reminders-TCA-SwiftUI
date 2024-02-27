@@ -33,7 +33,6 @@ final class AllRemindersCoordinatorTests: XCTestCase {
         }
     }
 
-
     func test_cancelAddReminder() async {
         let newReminder = Reminder(id: UUID(0), title: "", note: "", isComplete: false)
 
@@ -57,7 +56,7 @@ final class AllRemindersCoordinatorTests: XCTestCase {
     }
 
     func test_reminderTapped() async {
-        let reminder = Reminder(id: UUID(0),title: "Title 1", note: "Note 1", isComplete: false)
+        let reminder = Reminder(id: UUID(0), title: "Title 1", note: "Note 1", isComplete: false)
 
         let store = TestStore(
             initialState: AllRemindersCoordinator.State(
@@ -78,7 +77,7 @@ final class AllRemindersCoordinatorTests: XCTestCase {
     }
 
     func test_editReminder() async {
-        let reminder = Reminder(id: UUID(0),title: "Title 1", note: "Note 1", isComplete: false)
+        let reminder = Reminder(id: UUID(0), title: "Title 1", note: "Note 1", isComplete: false)
 
         let store = TestStore(
             initialState: AllRemindersCoordinator.State(
@@ -107,22 +106,22 @@ final class AllRemindersCoordinatorTests: XCTestCase {
         editReminder.note = "Edit note"
 
         await store.send(.destination(.presented(.editReminder(.binding(.set(\.reminder, editReminder)))))) { state in
-            state.destination?.modify(\.editReminder, yield: { $0.reminder = editReminder })
+            state.destination?.modify(\.editReminder) { $0.reminder = editReminder }
         }
 
         await store.send(.view(.saveEditReminderTapped)) { state in
             guard let editedReminder = state.destination?[case: \.editReminder]?.reminder else {
                 return
             }
-            
-            state.path[id: 0]?.modify(\.detail, yield: { $0.reminder = editedReminder })
+
+            state.path[id: 0]?.modify(\.detail) { $0.reminder = editedReminder }
             state.remindersList.reminders[id: editedReminder.id] = editedReminder
             state.destination = nil
         }
     }
 
     func test_cancelEditReminder() async {
-        let reminder = Reminder(id: UUID(0),title: "Title 1", note: "Note 1", isComplete: false)
+        let reminder = Reminder(id: UUID(0), title: "Title 1", note: "Note 1", isComplete: false)
 
         let store = TestStore(
             initialState: AllRemindersCoordinator.State(
@@ -148,7 +147,7 @@ final class AllRemindersCoordinatorTests: XCTestCase {
         editReminder.note = "Edit note"
 
         await store.send(.destination(.presented(.editReminder(.binding(.set(\.reminder, editReminder)))))) { state in
-            state.destination?.modify(\.editReminder, yield: { $0.reminder = editReminder })
+            state.destination?.modify(\.editReminder) { $0.reminder = editReminder }
         }
 
         await store.send(.view(.cancelEditReminderTapped)) {

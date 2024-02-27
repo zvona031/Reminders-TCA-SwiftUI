@@ -10,18 +10,7 @@ struct RemindersApp: App {
         WindowGroup {
             AppView(
                 store: Store(
-                    initialState: AppFeature.State(
-                        allReminders: AllRemindersCoordinator.State(
-                            remindersList: RemindersListFeature.State(
-                                reminders: [
-                                    Reminder(title: "1", note: "1"),
-                                    Reminder(title: "2", note: "2"),
-                                    Reminder(title: "3", note: "3"),
-                                    Reminder(title: "4", note: "4")
-                                ]
-                            )
-                        )
-                    )
+                    initialState: AppFeature.State()
                 ) {
                     AppFeature()
                 }

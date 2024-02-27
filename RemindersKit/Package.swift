@@ -10,23 +10,18 @@ let package = Package(
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(name: "Domain",
-                 targets: ["Domain"]),
-        .library(name: "AppFeature",
-                 targets: ["AppFeature"]),
-        .library(name: "RemindersList",
-                 targets: ["RemindersList"]),
-        .library(name: "ReminderForm",
-                 targets: ["ReminderForm"]),
-        .library(name: "ReminderDetail",
-                 targets: ["ReminderDetail"])
+        .library(name: "Domain", targets: ["Domain"]),
+        .library(name: "AppFeature", targets: ["AppFeature"]),
+        .library(name: "RemindersList", targets: ["RemindersList"]),
+        .library(name: "ReminderForm", targets: ["ReminderForm"]),
+        .library(name: "ReminderDetail", targets: ["ReminderDetail"]),
+        .library(name: "SwiftUIHelpers", targets: ["SwiftUIHelpers"])
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.8.0")
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
+        .target(name: "SwiftUIHelpers"),
         .target(name: "Domain"),
         .target(name: "AppFeature", dependencies: [
             "RemindersList",
@@ -37,6 +32,7 @@ let package = Package(
         ]),
         .target(name: "RemindersList", dependencies: [
             "Domain",
+            "SwiftUIHelpers",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ]),
         .target(name: "ReminderForm", dependencies: [

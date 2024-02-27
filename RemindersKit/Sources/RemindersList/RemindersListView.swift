@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUIHelpers
 import ComposableArchitecture
 
 @ViewAction(for: RemindersListFeature.self)
@@ -32,6 +33,9 @@ public struct RemindersListView: View {
                 }.onDelete { indexSet in
                     send(.onDeleteTapped(indexSet))
                 }
+            }
+            .onFirstAppear {
+                await send(.onFirstAppear).finish()
             }
         }
     }

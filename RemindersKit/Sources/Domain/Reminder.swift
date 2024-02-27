@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Reminder: Identifiable, Equatable {
+public struct Reminder: Identifiable, Equatable, Codable {
     public let id: UUID
     public var title: String
     public var note: String

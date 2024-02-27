@@ -3,6 +3,7 @@ import RemindersList
 import ReminderDetail
 import ReminderForm
 import Domain
+import Dependencies
 
 public enum Tab {
     case allReminders
@@ -39,6 +40,8 @@ public struct AppFeature {
         case binding(BindingAction<State>)
     }
 
+    @Dependency(\.remindersClient.save) var saveReminders
+
     public var body: some ReducerOf<Self> {
         BindingReducer()
         Scope(
@@ -46,6 +49,9 @@ public struct AppFeature {
           action: \.allReminders
         ) {
             AllRemindersCoordinator()
+        }
+        .onChange(of: \.allReminders.remindersList.reminders) { _, _ in
+            persistRemindersReducer()
         }
 
         Scope(
@@ -97,6 +103,18 @@ public struct AppFeature {
                 return .none
             case .binding:
                 return .none
+            }
+        }
+        .onChange(of: \.allReminders.remindersList.reminders) { _, _ in
+            persistRemindersReducer()
+        }
+    }
+
+    func persistRemindersReducer() -> some ReducerOf<Self> {
+        Reduce { state, _ in
+            .run { [reminders = state.allReminders.remindersList.reminders.elements] _ in
+                print("Reminders persisted")
+                try saveReminders(reminders)
             }
         }
     }

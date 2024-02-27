@@ -4,6 +4,14 @@ import ReminderDetail
 import ReminderForm
 import Domain
 
+extension RemindersListFeature.State {
+    public static let completedReminders = withDependencies {
+        $0.remindersClient = .completedRemindersValue
+    } operation: {
+        Self()
+    }
+}
+
 @Reducer
 public struct CompletedRemindersCoordinator {
     public init() {}
@@ -48,9 +56,13 @@ public struct CompletedRemindersCoordinator {
     public var body: some ReducerOf<Self> {
         Scope(
           state: \.remindersList,
-          action: /Action.remindersList
+          action: \.remindersList
         ) {
-          RemindersListFeature()
+            RemindersListFeature()
+                .transformDependency(\.remindersClient, transform: { dependency in
+                    let load = dependency.load
+                    dependency.load = { try load().filter { $0.isComplete }}
+                })
         }
 
         Reduce<State, Action> { state, action in

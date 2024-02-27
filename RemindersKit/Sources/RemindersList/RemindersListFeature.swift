@@ -1,18 +1,19 @@
 import ComposableArchitecture
 import Foundation
 import Domain
+import Dependencies
 
 @Reducer
 public struct RemindersListFeature {
     public init() {}
 
+    @Dependency(\.remindersClient.load) var loadReminders
+
     @ObservableState
     public struct State: Equatable {
         public var reminders: IdentifiedArrayOf<Reminder> = []
 
-        public init(reminders: IdentifiedArrayOf<Reminder> = []) {
-            self.reminders = reminders
-        }
+        public init() {}
     }
 
     public enum Action: ViewAction {
@@ -20,6 +21,7 @@ public struct RemindersListFeature {
             case onReminderTapped(Reminder)
             case onCompleteTapped(Reminder.ID)
             case onDeleteTapped(IndexSet)
+            case onFirstAppear
         }
 
         @CasePathable
@@ -31,6 +33,7 @@ public struct RemindersListFeature {
 
         case view(ViewAction)
         case delegate(Delegate)
+        case remindersResponse(Result<[Reminder], Error>)
     }
 
     public var body: some ReducerOf<Self> {
@@ -51,7 +54,16 @@ public struct RemindersListFeature {
                     let ids = indexSet.map { state.reminders.elements[$0].id }
                     state.reminders.remove(atOffsets: indexSet)
                     return .send(.delegate(.onDeleteTapped(ids)))
+                case .onFirstAppear:
+                    return .run { send in
+                        await send(.remindersResponse(Result { try loadReminders() }))
+                    }
                 }
+            case .remindersResponse(.success(let reminders)):
+                state.reminders = IdentifiedArray(uniqueElements: reminders)
+                return .none
+            case .remindersResponse(.failure):
+                return .none
             case .delegate:
                 return .none
             }

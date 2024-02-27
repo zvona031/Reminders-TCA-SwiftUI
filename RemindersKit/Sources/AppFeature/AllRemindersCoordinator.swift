@@ -3,6 +3,7 @@ import RemindersList
 import ReminderDetail
 import ReminderForm
 import Domain
+import Dependencies
 import Foundation
 
 @Reducer
@@ -53,7 +54,7 @@ public struct AllRemindersCoordinator {
     public var body: some ReducerOf<Self> {
         Scope(
           state: \.remindersList,
-          action: /Action.remindersList
+          action: \.remindersList
         ) {
           RemindersListFeature()
         }

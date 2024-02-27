@@ -20,7 +20,9 @@ public struct CompletedRemindersView: View {
             } destination: { store in
                 switch store.case {
                 case let .detail(detailStore):
-                    reminderDetailView(detailStore: detailStore)
+                    WithPerceptionTracking {
+                        reminderDetailView(detailStore: detailStore)
+                    }
                 }
             }
         }
