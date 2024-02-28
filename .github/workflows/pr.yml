@@ -1,0 +1,69 @@
+name: Pull Request
+
+on: pull_request:
+      branches [ develop ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: lint
+    outputs:
+      runner_name: ${{ steps.register_runner.outputs.runner_name }}
+    runs-on: [macos]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Bundler
+        run: |
+          bundle install
+      - name: SwiftLint
+        run: |
+          bundle exec fastlane lint diff_only:true
+      - name: Register runner
+        id: register_runner
+        run: echo "runner_name=${{runner.name}}" >> $GITHUB_OUTPUT
+#  generate:
+#    name: generate
+#    runs-on: ${{ needs.lint.outputs.runner_name }}
+#    needs: [lint]
+#    outputs:
+#      has_packages_cache_hit: ${{ steps.packages-cache.outputs.cache-hit == 'true' }}
+#    steps:
+#      - uses: actions/checkout@v3
+#        with:
+#          fetch-depth: 0
+#      - name: Cache packages
+#        uses: actions/cache@v3
+#        id: packages-cache
+#        with:
+#          path: spm/checkouts
+#          key: ${{ runner.os }}-packages-${{ hashFiles('**/Package.resolved') }}
+#          restore-keys: |
+#            ${{ runner.os }}-packages-
+#      - name: Generate
+#        run: |
+#          bundle exec fastlane generate skip_certs:true
+#  test:
+#    runs-on: ${{ needs.lint.outputs.runner_name }}
+#    needs: [lint, generate]
+#    steps:
+#      - name: Fastlane tests
+#        run: |
+#          bundle exec fastlane scan
+#        env:
+#          HAS_PACKAGES_CACHE_HIT: ${{ needs.generate.outputs.has_packages_cache_hit }}
+#  run_if:
+#    if: startsWith(github.base_ref, 'develop')
+#    name: archive
+#    runs-on: ${{ needs.lint.outputs.runner_name }}
+#    needs: [lint, generate, test]
+#    steps:
+#      - name: Archive as AdHoc
+#        run: |
+#          bundle exec fastlane run unlock_keychain
+#          bundle exec fastlane archive --env dev
+#
