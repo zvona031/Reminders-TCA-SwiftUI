@@ -25,36 +25,15 @@ jobs:
       - name: Register runner
         id: register_runner
         run: echo "runner_name=${{runner.name}}" >> $GITHUB_OUTPUT
-  build:
-    name: build
+  test:
     runs-on: ${{ needs.lint.outputs.runner_name }}
-    needs: [lint]
-    outputs:
-      has_packages_cache_hit: ${{ steps.packages-cache.outputs.cache-hit == 'true' }}
+    needs: [lint, generate]
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Cache packages
-        uses: actions/cache@v4
-        id: packages-cache
-        with:
-          path: spm/checkouts
-          key: ${{ runner.os }}-packages-${{ hashFiles('**/Package.resolved') }}
-          restore-keys: |
-            ${{ runner.os }}-packages-
-      - name: Generate
+      - name: Fastlane tests
         run: |
-          bundle exec fastlane build
-#  test:
-#    runs-on: ${{ needs.lint.outputs.runner_name }}
-#    needs: [lint, generate]
-#    steps:
-#      - name: Fastlane tests
-#        run: |
-#          bundle exec fastlane scan
-#        env:
-#          HAS_PACKAGES_CACHE_HIT: ${{ needs.generate.outputs.has_packages_cache_hit }}
+          bundle exec fastlane scan
+        env:
+          HAS_PACKAGES_CACHE_HIT: ${{ needs.generate.outputs.has_packages_cache_hit }}
 #  run_if:
 #    if: startsWith(github.base_ref, 'develop')
 #    name: archive
