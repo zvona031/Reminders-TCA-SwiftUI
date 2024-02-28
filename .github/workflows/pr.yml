@@ -25,27 +25,27 @@ jobs:
       - name: Register runner
         id: register_runner
         run: echo "runner_name=${{runner.name}}" >> $GITHUB_OUTPUT
-#  generate:
-#    name: generate
-#    runs-on: ${{ needs.lint.outputs.runner_name }}
-#    needs: [lint]
-#    outputs:
-#      has_packages_cache_hit: ${{ steps.packages-cache.outputs.cache-hit == 'true' }}
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          fetch-depth: 0
-#      - name: Cache packages
-#        uses: actions/cache@v3
-#        id: packages-cache
-#        with:
-#          path: spm/checkouts
-#          key: ${{ runner.os }}-packages-${{ hashFiles('**/Package.resolved') }}
-#          restore-keys: |
-#            ${{ runner.os }}-packages-
-#      - name: Generate
-#        run: |
-#          bundle exec fastlane generate skip_certs:true
+  build:
+    name: build
+    runs-on: ${{ needs.lint.outputs.runner_name }}
+    needs: [lint]
+    outputs:
+      has_packages_cache_hit: ${{ steps.packages-cache.outputs.cache-hit == 'true' }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Cache packages
+        uses: actions/cache@v3
+        id: packages-cache
+        with:
+          path: spm/checkouts
+          key: ${{ runner.os }}-packages-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-packages-
+      - name: Generate
+        run: |
+          bundle exec fastlane build
 #  test:
 #    runs-on: ${{ needs.lint.outputs.runner_name }}
 #    needs: [lint, generate]
