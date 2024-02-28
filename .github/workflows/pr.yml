@@ -27,7 +27,7 @@ jobs:
         run: echo "runner_name=${{runner.name}}" >> $GITHUB_OUTPUT
   test:
     runs-on: ${{ needs.lint.outputs.runner_name }}
-    needs: [lint, generate]
+    needs: [lint]
     steps:
       - name: Fastlane tests
         run: |
