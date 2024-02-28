@@ -9,31 +9,23 @@ concurrency:
 jobs:
   lint:
     name: lint
-    outputs:
-      runner_name: ${{ steps.register_runner.outputs.runner_name }}
     runs-on: [macos-13]
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
       - name: Bundler
         run: |
           bundle install
       - name: SwiftLint
         run: |
           bundle exec fastlane run swiftlint
-      - name: Register runner
-        id: register_runner
-        run: echo "runner_name=${{runner.name}}" >> $GITHUB_OUTPUT
   test:
-    runs-on: ${{ needs.lint.outputs.runner_name }}
+    runs-on: [macos-13]
     needs: [lint]
     steps:
+      - uses: actions/checkout@v3
       - name: Fastlane tests
         run: |
           bundle exec fastlane scan
-        env:
-          HAS_PACKAGES_CACHE_HIT: ${{ needs.generate.outputs.has_packages_cache_hit }}
 #  run_if:
 #    if: startsWith(github.base_ref, 'develop')
 #    name: archive
