@@ -23,7 +23,7 @@ platform :ios do
 	clean: true,
 	skip_codesigning: true,
 	xcargs: "-skipMacroValidation -allowProvisioningUpdates",
-	destination: "platform=iOS Simulator,name=iPhone 14,OS=16.0",
+	# destination: "platform=iOS Simulator,name=iPhone 14,OS=16.0",
 	export_method: "development",
 	export_team_id: "4JDZ4BJ4PW"
 	)
