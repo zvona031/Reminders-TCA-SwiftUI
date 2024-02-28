@@ -11,7 +11,7 @@ jobs:
     name: lint
     outputs:
       runner_name: ${{ steps.register_runner.outputs.runner_name }}
-    runs-on: [macos]
+    runs-on: [macos-13]
     steps:
       - uses: actions/checkout@v3
         with:
