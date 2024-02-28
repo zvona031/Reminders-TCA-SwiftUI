@@ -15,7 +15,7 @@ final class AllRemindersCoordinatorTests: XCTestCase {
             $0.uuid = .incrementing
         }
 
-        let newReminder = Reminder(id: UUID(0), title: "", note: "", isComplete: false)
+        let newReminder = Reminder.mock
         await store.send(.view(.addButtonTapped)) { state in
             state.destination = .addReminder(ReminderFormFeature.State(reminder: newReminder))
         }
@@ -34,7 +34,7 @@ final class AllRemindersCoordinatorTests: XCTestCase {
     }
 
     func test_cancelAddReminder() async {
-        let newReminder = Reminder(id: UUID(0), title: "", note: "", isComplete: false)
+        let newReminder = Reminder.mock
 
         let store = TestStore(initialState: AllRemindersCoordinator.State(destination: .addReminder(ReminderFormFeature.State(reminder: newReminder)))) {
             AllRemindersCoordinator()
@@ -56,19 +56,17 @@ final class AllRemindersCoordinatorTests: XCTestCase {
     }
 
     func test_reminderTapped() async {
-        let reminder = Reminder(id: UUID(0), title: "Title 1", note: "Note 1", isComplete: false)
+        let reminder = Reminder.mock
 
         let store = TestStore(
             initialState: AllRemindersCoordinator.State(
-                remindersList: RemindersListFeature.State(
-                    reminders: [
-                        reminder
-                    ])
+                remindersList: RemindersListFeature.State()
             )
         ) {
             AllRemindersCoordinator()
         } withDependencies: {
             $0.uuid = .incrementing
+            $0.remindersClient.load = { [reminder] }
         }
 
         await store.send(.remindersList(.delegate(.onReminderTapped(reminder)))) {
@@ -77,22 +75,20 @@ final class AllRemindersCoordinatorTests: XCTestCase {
     }
 
     func test_editReminder() async {
-        let reminder = Reminder(id: UUID(0), title: "Title 1", note: "Note 1", isComplete: false)
+        let reminder = Reminder.mock
 
         let store = TestStore(
             initialState: AllRemindersCoordinator.State(
                 path: StackState([
                     .detail(ReminderDetailFeature.State(reminder: reminder))
                 ]),
-                remindersList: RemindersListFeature.State(
-                    reminders: [
-                        reminder
-                    ])
+                remindersList: RemindersListFeature.State()
             )
         ) {
             AllRemindersCoordinator()
         } withDependencies: {
             $0.uuid = .incrementing
+            $0.remindersClient.load = { [reminder] }
         }
 
         store.exhaustivity = .off
@@ -121,7 +117,7 @@ final class AllRemindersCoordinatorTests: XCTestCase {
     }
 
     func test_cancelEditReminder() async {
-        let reminder = Reminder(id: UUID(0), title: "Title 1", note: "Note 1", isComplete: false)
+        let reminder = Reminder.mock
 
         let store = TestStore(
             initialState: AllRemindersCoordinator.State(
@@ -129,15 +125,13 @@ final class AllRemindersCoordinatorTests: XCTestCase {
                 path: StackState([
                     .detail(ReminderDetailFeature.State(reminder: reminder))
                 ]),
-                remindersList: RemindersListFeature.State(
-                    reminders: [
-                        reminder
-                    ])
+                remindersList: RemindersListFeature.State()
             )
         ) {
             AllRemindersCoordinator()
         } withDependencies: {
             $0.uuid = .incrementing
+            $0.remindersClient.load = { [reminder] }
         }
 
         store.exhaustivity = .off

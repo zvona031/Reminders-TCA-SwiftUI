@@ -1,8 +1,9 @@
 import SwiftUI
 import ComposableArchitecture
 
+@ViewAction(for: ReminderFormFeature.self)
 public struct ReminderFormView: View {
-    @Perception.Bindable var store: StoreOf<ReminderFormFeature>
+    @Perception.Bindable public var store: StoreOf<ReminderFormFeature>
 
     public init(store: StoreOf<ReminderFormFeature>) {
         self.store = store
@@ -12,14 +13,28 @@ public struct ReminderFormView: View {
         WithPerceptionTracking {
             Form {
                 Section {
-                    TextField("Title", text: $store.reminder.title)
-                } header: {
-                    Text("Info")
+                    TextField("Title", text: $store.reminder.title, axis: .vertical)
+                    TextField("Note", text: $store.reminder.note, axis: .vertical)
+                        .frame(minHeight: 100, alignment: .topLeading)
                 }
                 Section {
-                    TextEditor(text: $store.reminder.note)
-                } header: {
-                    Text("Note")
+                    Toggle("Date and time", isOn: .init(get: {
+                        store.reminder.date != nil
+                    }, set: { isOn in
+                        send(.dateToggleTapped(isOn), animation: .easeInOut)
+                    }))
+                    if let date = store.reminder.date {
+                        DatePicker("",
+                                   selection: .init(
+                                    get: {
+                                        date
+                                    },
+                                    set: { newValue in
+                                        store.reminder.date = newValue
+                                    })
+                        )
+                        .datePickerStyle(GraphicalDatePickerStyle())
+                    }
                 }
             }
         }

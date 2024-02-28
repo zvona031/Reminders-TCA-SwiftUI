@@ -19,6 +19,7 @@ public struct ReminderDetailFeature {
             case completeButtonTapped
         }
 
+        @CasePathable
         public enum Delegate {
             case onCompleteTapped(Reminder)
         }

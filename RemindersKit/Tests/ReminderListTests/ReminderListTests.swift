@@ -13,6 +13,10 @@ final class ReminderListTests: XCTestCase {
             $0.remindersClient.load = { [reminder] }
         }
 
+        store.exhaustivity = .off
+
+        await store.send(.view(.onFirstAppear))
+
         await store.send(.view(.onCompleteTapped(reminder.id))) {
             $0.reminders[id: reminder.id]?.isComplete = true
         }
@@ -34,6 +38,10 @@ final class ReminderListTests: XCTestCase {
         } withDependencies: {
             $0.remindersClient.load = { [reminder1, reminder2] }
         }
+
+        store.exhaustivity = .off
+
+        await store.send(.view(.onFirstAppear))
 
         await store.send(.view(.onDeleteTapped(IndexSet(integer: 0)))) {
             $0.reminders.remove(id: reminder1.id)

@@ -15,14 +15,20 @@ let package = Package(
         .library(name: "RemindersList", targets: ["RemindersList"]),
         .library(name: "ReminderForm", targets: ["ReminderForm"]),
         .library(name: "ReminderDetail", targets: ["ReminderDetail"]),
-        .library(name: "SwiftUIHelpers", targets: ["SwiftUIHelpers"])
+        .library(name: "SwiftUIHelpers", targets: ["SwiftUIHelpers"]),
+        .library(name: "TestHelpers", targets: ["TestHelpers"])
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.8.0")
     ],
     targets: [
+        .target(name: "TestHelpers"),
         .target(name: "SwiftUIHelpers"),
-        .target(name: "Domain"),
+        .target(name: "Domain", dependencies: [
+            // NOTE: add just Dependencies dependency
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+        ]
+               ),
         .target(name: "AppFeature", dependencies: [
             "RemindersList",
             "ReminderDetail",
@@ -46,6 +52,7 @@ let package = Package(
         .testTarget(name: "ReminderFormTests", dependencies: [
             "Domain",
             "ReminderForm",
+            "TestHelpers",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ]),
         .testTarget(name: "ReminderListTests", dependencies: [
@@ -53,12 +60,18 @@ let package = Package(
             "RemindersList",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ]),
-        .testTarget(name: "AllRemindersCoordinatorTests", dependencies: [
+        .testTarget(name: "ReminderDetailTests", dependencies: [
+            "Domain",
+            "ReminderDetail",
+            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+        ]),
+        .testTarget(name: "AppFeatureTests", dependencies: [
             "Domain",
             "RemindersList",
             "ReminderDetail",
             "ReminderForm",
             "AppFeature",
+            "TestHelpers",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ])
     ]

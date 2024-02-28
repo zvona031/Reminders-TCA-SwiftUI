@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "9B75235F-97DC-4225-9A85-211BA22ECFE8",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ReminderFormTests",
+        "name" : "ReminderFormTests"
+      }
+    }
+  ],
+  "version" : 1
+}

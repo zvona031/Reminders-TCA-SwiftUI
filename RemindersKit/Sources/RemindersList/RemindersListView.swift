@@ -17,7 +17,13 @@ public struct RemindersListView: View {
                     HStack {
                         VStack(alignment: .leading) {
                             Text(reminder.title)
+                                .font(.headline)
                             Text(reminder.note)
+                                .font(.subheadline)
+                            if let date = reminder.date {
+                                Text(date.formatted(date: .long, time: .shortened))
+                                    .font(.footnote)
+                            }
                         }
                         Spacer()
                         Image(systemName: "checkmark.circle")

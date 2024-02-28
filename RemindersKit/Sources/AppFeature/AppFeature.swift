@@ -113,7 +113,6 @@ public struct AppFeature {
     func persistRemindersReducer() -> some ReducerOf<Self> {
         Reduce { state, _ in
             .run { [reminders = state.allReminders.remindersList.reminders.elements] _ in
-                print("Reminders persisted")
                 try saveReminders(reminders)
             }
         }
