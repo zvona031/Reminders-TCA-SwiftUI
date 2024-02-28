@@ -13,7 +13,7 @@ jobs:
       runner_name: ${{ steps.register_runner.outputs.runner_name }}
     runs-on: [macos-14]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Bundler
@@ -32,11 +32,11 @@ jobs:
     outputs:
       has_packages_cache_hit: ${{ steps.packages-cache.outputs.cache-hit == 'true' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Cache packages
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         id: packages-cache
         with:
           path: spm/checkouts
