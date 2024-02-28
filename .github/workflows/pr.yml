@@ -21,7 +21,7 @@ jobs:
           bundle install
       - name: SwiftLint
         run: |
-          bundle exec fastlane lint diff_only:true
+          bundle exec fastlane run swiftlint
       - name: Register runner
         id: register_runner
         run: echo "runner_name=${{runner.name}}" >> $GITHUB_OUTPUT
