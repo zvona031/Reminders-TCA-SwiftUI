@@ -8,27 +8,23 @@ concurrency:
 
 jobs:
   lint:
-    name: lint
-    outputs:
-      runner_name: ${{ steps.register_runner.outputs.runner_name }}
+    name: SwiftLint
     runs-on: [macos-13]
     steps:
       - uses: actions/checkout@v3
-      - name: Bundler
+      - name: Install Bundler
         run: |
           bundle install
-      - name: SwiftLint
+      - name: Run SwiftLint
         run: |
           bundle exec fastlane run swiftlint
-      - name: Register runner
-        id: register_runner
-        run: echo "runner_name=${{runner.name}}" >> $GITHUB_OUTPUT
   test:
-    runs-on: ${{ needs.lint.outputs.runner_name }}
+    name: Tests
+    runs-on: [macos-13]
     needs: [lint]
     steps:
       - uses: actions/checkout@v3
-      - name: Fastlane tests
+      - name: Fastlane scan
         run: |
           bundle exec fastlane scan
 #  run_if:
