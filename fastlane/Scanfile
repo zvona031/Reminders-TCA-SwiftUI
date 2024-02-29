@@ -1,7 +1,7 @@
 scheme("AppFeature")
 package_path("RemindersKit")
 #device('iPhone SE (3rd generation)')
-destination('platform=iOS Simulator,OS=16.0,name=iPhone 14')
+destination('platform=iOS Simulator,name=iPhone 15')
 xcargs("-skipMacroValidation")
 clean(true)
 skip_build(false)
