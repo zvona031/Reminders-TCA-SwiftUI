@@ -11,7 +11,7 @@ jobs:
     name: SwiftLint
     runs-on: [macos-13]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Bundler
         run: |
           bundle install
@@ -23,7 +23,7 @@ jobs:
     runs-on: [macos-13]
     needs: [lint]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Bundler
         run: |
           bundle install
