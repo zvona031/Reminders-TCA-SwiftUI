@@ -19,7 +19,7 @@ let package = Package(
         .library(name: "TestHelpers", targets: ["TestHelpers"])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.8.0")
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", exact: "1.8.2")
     ],
     targets: [
         .target(name: "TestHelpers"),
