@@ -40,7 +40,7 @@ public struct AppFeature {
         case binding(BindingAction<State>)
     }
 
-    @Dependency(\.remindersClient.save) var saveReminders
+    @Dependency(RemindersClient.self) var remindersClient
 
     public var body: some ReducerOf<Self> {
         BindingReducer()
@@ -113,7 +113,7 @@ public struct AppFeature {
     func persistRemindersReducer() -> some ReducerOf<Self> {
         Reduce { state, _ in
             .run { [reminders = state.allReminders.remindersList.reminders.elements] _ in
-                try saveReminders(reminders)
+                try remindersClient.save(reminders)
             }
         }
     }
