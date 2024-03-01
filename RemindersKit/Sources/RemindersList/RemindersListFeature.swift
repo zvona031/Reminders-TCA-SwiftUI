@@ -36,6 +36,8 @@ public struct RemindersListFeature {
         case remindersResponse(Result<[Reminder], Error>)
     }
 
+    @Dependency(\.date) var date
+
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
@@ -47,7 +49,11 @@ public struct RemindersListFeature {
                     guard var reminder = state.reminders[id: id] else {
                         return .none
                     }
-                    reminder.isComplete.toggle()
+                    if reminder.completedDate != nil {
+                        reminder.completedDate = nil
+                    } else {
+                        reminder.completedDate = date.now
+                    }
                     state.reminders[id: id] = reminder
                     return .send(.delegate(.onCompleteTapped(reminder)))
                 case let .onDeleteTapped(indexSet):

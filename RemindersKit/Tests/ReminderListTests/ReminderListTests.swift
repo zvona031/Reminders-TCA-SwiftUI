@@ -2,15 +2,17 @@ import ComposableArchitecture
 import Domain
 import RemindersList
 import XCTest
+import TestHelpers
 
 @MainActor
 final class ReminderListTests: XCTestCase {
     func test_remindersList_completeReminderTap() async {
-        let reminder = Reminder(title: "Title", note: "Note", isComplete: false)
+        let reminder = Reminder.mock
         let store = TestStore(initialState: RemindersListFeature.State()) {
             RemindersListFeature()
         } withDependencies: {
             $0.remindersClient.load = { [reminder] }
+            $0.date.now = .mock
         }
 
         store.exhaustivity = .off
@@ -18,13 +20,13 @@ final class ReminderListTests: XCTestCase {
         await store.send(.view(.onFirstAppear))
 
         await store.send(.view(.onCompleteTapped(reminder.id))) {
-            $0.reminders[id: reminder.id]?.isComplete = true
+            $0.reminders[id: reminder.id]?.completedDate = .mock
         }
 
         await store.receive(\.delegate.onCompleteTapped)
 
         await store.send(.view(.onCompleteTapped(reminder.id))) {
-            $0.reminders[id: reminder.id]?.isComplete = false
+            $0.reminders[id: reminder.id]?.completedDate = nil
         }
 
         await store.receive(\.delegate.onCompleteTapped)

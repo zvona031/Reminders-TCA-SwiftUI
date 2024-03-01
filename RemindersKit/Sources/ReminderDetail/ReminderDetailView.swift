@@ -14,7 +14,7 @@ public struct ReminderDetailView: View {
             VStack {
                 Text(store.reminder.note)
                 Image(systemName: "checkmark.circle")
-                    .opacity(store.reminder.isComplete ? 1.0 : 0.3)
+                    .opacity(store.reminder.isCompleted ? 1.0 : 0.3)
                     .onTapGesture {
                         send(.completeButtonTapped)
                     }

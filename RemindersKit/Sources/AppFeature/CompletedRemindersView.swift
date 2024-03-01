@@ -30,9 +30,12 @@ public struct CompletedRemindersView: View {
 
     @ViewBuilder
     func root() -> some View {
-        RemindersListView(
-            store: self.store.scope(state: \.remindersList, action: \.remindersList )
-        )
+        RemindersListView(store: self.store.scope(state: \.remindersList, action: \.remindersList)) { completedDate in
+            if let completedDate {
+                Text("Completed: \(completedDate.formatted(date: .long, time: .shortened))")
+                    .font(.caption)
+            }
+        }
         .navigationTitle("Completed reminders")
         .sheet(item: $store.scope(state: \.destination?.editReminder, action: \.destination.editReminder)) { store in
             editReminderFormView(store: store)

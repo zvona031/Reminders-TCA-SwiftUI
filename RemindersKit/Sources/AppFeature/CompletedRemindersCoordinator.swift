@@ -61,7 +61,7 @@ public struct CompletedRemindersCoordinator {
             RemindersListFeature()
                 .transformDependency(\.remindersClient, transform: { dependency in
                     let load = dependency.load
-                    dependency.load = { try load().filter { $0.isComplete }}
+                    dependency.load = { try load().filter { $0.isCompleted }}
                 })
         }
 
@@ -103,7 +103,7 @@ public struct CompletedRemindersCoordinator {
                 }
 
             case let .path(.element(id: _, action: .detail(.delegate(.onCompleteTapped(changedReminder))))):
-                if changedReminder.isComplete {
+                if changedReminder.isCompleted {
                     state.remindersList.reminders.append(changedReminder)
                 } else {
                     state.remindersList.reminders.remove(changedReminder)

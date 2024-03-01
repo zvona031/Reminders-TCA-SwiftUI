@@ -30,9 +30,7 @@ public struct AllRemindersView: View {
 
     @ViewBuilder
     func root() -> some View {
-        RemindersListView(
-            store: self.store.scope(state: \.remindersList, action: \.remindersList )
-        )
+        RemindersListView(store: self.store.scope(state: \.remindersList, action: \.remindersList)) { _ in }
         .navigationTitle("All reminders")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -92,6 +90,7 @@ public struct AllRemindersView: View {
                         } label: {
                             Text("Save")
                         }
+                        .disabled(store.isAddDisabled)
                     }
                 }
         }

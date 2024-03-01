@@ -22,7 +22,7 @@ extension RemindersClient: DependencyKey {
         let client: RemindersClient = .liveValue
 
         return RemindersClient(load: {
-            try client.load().filter { $0.isComplete }
+            try client.load().filter { $0.isCompleted }
         }, save: client.save)
     }
 }

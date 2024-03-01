@@ -13,6 +13,10 @@ public struct ReminderFormFeature {
         public init(reminder: Reminder) {
             self.reminder = reminder
         }
+
+        public var isAddDisabled: Bool {
+            reminder.title.isEmpty
+        }
     }
 
     public enum Action: BindableAction, ViewAction {

@@ -6,20 +6,26 @@ public struct Reminder: Identifiable, Equatable, Codable {
     public var title: String
     public var note: String
     public var date: Date?
-    public var isComplete: Bool
+    public var completedDate: Date?
 
     public init(
         id: UUID = UUID(),
         title: String,
         note: String,
         date: Date? = nil,
-        isComplete: Bool = false
+        completedDate: Date? = nil
     ) {
         self.id = id
         self.title = title
         self.note = note
         self.date = date
-        self.isComplete = isComplete
+        self.completedDate = completedDate
+    }
+}
+
+public extension Reminder {
+    var isCompleted: Bool {
+        completedDate != nil
     }
 }
 

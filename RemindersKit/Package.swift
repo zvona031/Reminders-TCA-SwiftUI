@@ -19,7 +19,7 @@ let package = Package(
         .library(name: "TestHelpers", targets: ["TestHelpers"])
     ],
     dependencies: [
-        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", exact: "1.8.2")
+        .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.8.0")
     ],
     targets: [
         .target(name: "TestHelpers"),
@@ -58,11 +58,13 @@ let package = Package(
         .testTarget(name: "ReminderListTests", dependencies: [
             "Domain",
             "RemindersList",
+            "TestHelpers",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ]),
         .testTarget(name: "ReminderDetailTests", dependencies: [
             "Domain",
             "ReminderDetail",
+            "TestHelpers",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ]),
         .testTarget(name: "AppFeatureTests", dependencies: [
