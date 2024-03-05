@@ -2,7 +2,6 @@ import ComposableArchitecture
 import ReminderDetail
 import XCTest
 import Domain
-import TestHelpers
 
 @MainActor
 final class ReminderDetailsTests: XCTestCase {

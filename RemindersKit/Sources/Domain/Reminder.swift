@@ -33,8 +33,3 @@ public extension Reminder {
         completedDate != nil
     }
 }
-
-public extension Reminder {
-    static let mock = Reminder(id: UUID(0), title: "", note: "")
-    static let mock1 = Reminder(id: UUID(1), title: "Title 1", note: "Note 1")
-}
