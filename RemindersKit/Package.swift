@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "RemindersKit",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v16)
     ],
@@ -15,19 +16,18 @@ let package = Package(
         .library(name: "RemindersList", targets: ["RemindersList"]),
         .library(name: "ReminderForm", targets: ["ReminderForm"]),
         .library(name: "ReminderDetail", targets: ["ReminderDetail"]),
-        .library(name: "SwiftUIHelpers", targets: ["SwiftUIHelpers"]),
-        .library(name: "TestHelpers", targets: ["TestHelpers"])
+        .library(name: "SwiftUIHelpers", targets: ["SwiftUIHelpers"])
     ],
     dependencies: [
         .package(url: "https://github.com/pointfreeco/swift-composable-architecture.git", from: "1.8.0")
     ],
     targets: [
-        .target(name: "TestHelpers"),
         .target(name: "SwiftUIHelpers"),
-        .target(name: "Domain", dependencies: [
-            // NOTE: add just Dependencies dependency
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-        ]
+        .target(name: "Domain",
+                dependencies: [
+                    // NOTE: add just Dependencies dependency
+                    .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+                ]
                ),
         .target(name: "AppFeature", dependencies: [
             "RemindersList",
@@ -41,10 +41,14 @@ let package = Package(
             "SwiftUIHelpers",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ]),
-        .target(name: "ReminderForm", dependencies: [
-            "Domain",
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-        ]),
+        .target(name: "ReminderForm",
+                dependencies: [
+                    "Domain",
+                    .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+                ],
+                resources: [
+                    .process("Resources")
+                ]),
         .target(name: "ReminderDetail", dependencies: [
             "Domain",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
@@ -52,7 +56,6 @@ let package = Package(
         .testTarget(name: "ReminderFormTests", dependencies: [
             "Domain",
             "ReminderForm",
-            "TestHelpers",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ]),
         .testTarget(name: "ReminderListTests", dependencies: [
@@ -71,7 +74,6 @@ let package = Package(
             "ReminderDetail",
             "ReminderForm",
             "AppFeature",
-            "TestHelpers",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ])
     ]

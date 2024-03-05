@@ -71,7 +71,7 @@ public struct AppFeature {
                     }
                     return .none
                 case let .onCompleteTapped(reminder):
-                    if reminder.isComplete {
+                    if reminder.isCompleted {
                         state.completedReminders.remindersList.reminders.insert(reminder, at: 0)
                     } else {
                         state.completedReminders.remindersList.reminders.remove(reminder)

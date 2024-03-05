@@ -13,6 +13,10 @@ public struct ReminderFormFeature {
         public init(reminder: Reminder) {
             self.reminder = reminder
         }
+
+        public var isAddDisabled: Bool {
+            reminder.title.isEmpty
+        }
     }
 
     public enum Action: BindableAction, ViewAction {
@@ -28,16 +32,26 @@ public struct ReminderFormFeature {
 
     public var body: some ReducerOf<Self> {
         BindingReducer()
+            .onChange(of: \.reminder.earlyReminderType) { _, newValue in
+                Reduce { state, _ in
+                    if let reminderTrigger = newValue.predefined {
+                        state.reminder.earlyReminderTrigger = reminderTrigger
+                    } else if newValue.is(\.custom) {
+                        state.reminder.earlyReminderTrigger = .defaultValue
+                    } else {
+                        state.reminder.earlyReminderTrigger = nil
+                    }
+                    return .none
+                }
+            }
         Reduce { state, action in
             switch action {
             case .view(let viewAction):
                 switch viewAction {
                 case .dateToggleTapped(let isOn):
-                    if isOn {
-                        state.reminder.date = date()
-                    } else {
-                        state.reminder.date = nil
-                    }
+                    state.reminder.date = isOn ? date() : nil
+                    state.reminder.earlyReminderType = .none
+                    state.reminder.earlyReminderTrigger = nil
                     return .none
                 }
             case .binding:

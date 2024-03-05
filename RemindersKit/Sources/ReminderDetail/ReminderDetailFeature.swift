@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import Dependencies
 import Domain
 
 @Reducer
@@ -28,13 +29,19 @@ public struct ReminderDetailFeature {
         case delegate(Delegate)
     }
 
+    @Dependency(\.date.now) var now
+
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
             switch action {
             case let .view(viewAction):
                 switch viewAction {
                 case .completeButtonTapped:
-                    state.reminder.isComplete.toggle()
+                    if state.reminder.completedDate != nil {
+                        state.reminder.completedDate = nil
+                    } else {
+                        state.reminder.completedDate = now
+                    }
                     return .send(.delegate(.onCompleteTapped(state.reminder)))
                 }
             case .delegate:
