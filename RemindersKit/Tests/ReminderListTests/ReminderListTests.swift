@@ -51,4 +51,22 @@ final class ReminderListTests: XCTestCase {
 
         await store.receive(\.delegate.onDeleteTapped)
     }
+
+    func test_remindersList_reminderTap() async {
+        let reminder1 = Reminder(title: "Title 1", note: "Note 1")
+        let reminder2 = Reminder(title: "Title 2", note: "Note 2")
+        let store = TestStore(initialState: RemindersListFeature.State()) {
+            RemindersListFeature()
+        } withDependencies: {
+            $0.remindersClient.load = { [reminder1, reminder2] }
+        }
+
+        store.exhaustivity = .off
+
+        await store.send(.view(.onFirstAppear))
+
+        await store.send(.view(.onReminderTapped(reminder2)))
+
+        await store.receive(\.delegate.onReminderTapped, reminder2)
+    }
 }

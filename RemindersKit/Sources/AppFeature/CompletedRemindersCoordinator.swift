@@ -4,23 +4,15 @@ import ReminderDetail
 import ReminderForm
 import Domain
 
-extension RemindersListFeature.State {
-    public static let completedReminders = withDependencies {
-        $0.remindersClient = .completedRemindersValue
-    } operation: {
-        Self()
-    }
-}
-
 @Reducer
 public struct CompletedRemindersCoordinator {
     public init() {}
 
     @ObservableState
-    public struct State {
-        @Presents var destination: Destination.State?
-        var path = StackState<PathFeature.State>()
-        var remindersList = RemindersListFeature.State()
+    public struct State: Equatable {
+        @Presents public var destination: Destination.State?
+        public var path = StackState<PathFeature.State>()
+        public var remindersList = RemindersListFeature.State()
 
         public init(
             destination: Destination.State? = nil,
@@ -40,6 +32,7 @@ public struct CompletedRemindersCoordinator {
             case cancelEditReminderTapped
         }
 
+        @CasePathable
         public enum Delegate {
             case onCompleteTapped(Reminder)
             case onReminderChanged(Reminder)

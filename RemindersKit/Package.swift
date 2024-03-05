@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "RemindersKit",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v16)
     ],
@@ -24,10 +25,11 @@ let package = Package(
     targets: [
         .target(name: "TestHelpers"),
         .target(name: "SwiftUIHelpers"),
-        .target(name: "Domain", dependencies: [
-            // NOTE: add just Dependencies dependency
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-        ]
+        .target(name: "Domain",
+                dependencies: [
+                    // NOTE: add just Dependencies dependency
+                    .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+                ]
                ),
         .target(name: "AppFeature", dependencies: [
             "RemindersList",
@@ -41,10 +43,14 @@ let package = Package(
             "SwiftUIHelpers",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
         ]),
-        .target(name: "ReminderForm", dependencies: [
-            "Domain",
-            .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
-        ]),
+        .target(name: "ReminderForm",
+                dependencies: [
+                    "Domain",
+                    .product(name: "ComposableArchitecture", package: "swift-composable-architecture")
+                ],
+                resources: [
+                    .process("Resources")
+                ]),
         .target(name: "ReminderDetail", dependencies: [
             "Domain",
             .product(name: "ComposableArchitecture", package: "swift-composable-architecture")

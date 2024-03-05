@@ -29,7 +29,7 @@ public struct ReminderDetailFeature {
         case delegate(Delegate)
     }
 
-    @Dependency(\.date) var date
+    @Dependency(\.date.now) var now
 
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -40,7 +40,7 @@ public struct ReminderDetailFeature {
                     if state.reminder.completedDate != nil {
                         state.reminder.completedDate = nil
                     } else {
-                        state.reminder.completedDate = date.now
+                        state.reminder.completedDate = now
                     }
                     return .send(.delegate(.onCompleteTapped(state.reminder)))
                 }
