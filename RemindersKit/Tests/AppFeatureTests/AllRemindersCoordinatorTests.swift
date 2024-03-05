@@ -69,7 +69,6 @@ final class AllRemindersCoordinatorTests: XCTestCase {
             AllRemindersCoordinator()
         }
 
-
         await store.send(.view(.editButtonTapped(reminder))) { state in
             state.destination = .editReminder(ReminderFormFeature.State(reminder: reminder))
         }
@@ -158,9 +157,7 @@ final class AllRemindersCoordinatorTests: XCTestCase {
     func test_remindersList_completeTapped() async {
         let reminder = Reminder.mock
 
-        let store = TestStore(
-            initialState: AllRemindersCoordinator.State()
-        ) {
+        let store = TestStore(initialState: AllRemindersCoordinator.State()) {
             AllRemindersCoordinator()
         } withDependencies: {
             $0.date.now = .mock

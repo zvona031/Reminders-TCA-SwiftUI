@@ -52,10 +52,10 @@ public struct CompletedRemindersCoordinator {
           action: \.remindersList
         ) {
             RemindersListFeature()
-                .transformDependency(\.remindersClient, transform: { dependency in
+                .transformDependency(\.remindersClient) { dependency in
                     let load = dependency.load
-                    dependency.load = { try load().filter { $0.isCompleted }}
-                })
+                    dependency.load = { try load().filter { $0.isCompleted } }
+                }
         }
 
         Reduce<State, Action> { state, action in

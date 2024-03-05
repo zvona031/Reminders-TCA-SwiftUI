@@ -163,10 +163,14 @@ extension EarlyReminder {
     ReminderFormView(
         store: Store(
             initialState: ReminderFormFeature.State(
-                reminder: Reminder(title: "", note: "", date: Date(timeIntervalSince1970: 123456789), earlyReminderTrigger: ReminderTrigger(time: 5, unit: .hour))
-            ),
-            reducer: {
-                ReminderFormFeature()
-            })
+                reminder: Reminder(
+                    title: "",
+                    note: "",
+                    date: Date(timeIntervalSince1970: 123456789),
+                    earlyReminderTrigger: ReminderTrigger(time: 5, unit: .hour))
+            )
+        ) {
+            ReminderFormFeature()
+        }
     )
 }

@@ -21,7 +21,7 @@ final class CompletedRemindersCoordinatorTests: XCTestCase {
         ) {
             CompletedRemindersCoordinator()
         } withDependencies: {
-            $0.remindersClient.load = { [reminder]}
+            $0.remindersClient.load = { [reminder] }
         }
 
         store.exhaustivity = .off
@@ -113,9 +113,7 @@ final class CompletedRemindersCoordinatorTests: XCTestCase {
         var reminder = Reminder.mock
         reminder.completedDate = .mock
 
-        let store = TestStore(
-            initialState: CompletedRemindersCoordinator.State()
-        ) {
+        let store = TestStore(initialState: CompletedRemindersCoordinator.State()) {
             CompletedRemindersCoordinator()
         } withDependencies: {
             $0.remindersClient.load = { [reminder] }

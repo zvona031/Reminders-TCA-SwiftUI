@@ -33,5 +33,4 @@ final class ReminderDetailsTests: XCTestCase {
 
         await store.receive(\.delegate.onCompleteTapped, store.state.reminder)
     }
-
 }
