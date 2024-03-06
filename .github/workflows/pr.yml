@@ -1,0 +1,43 @@
+name: Pull Request
+
+on: [pull_request]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: SwiftLint
+    runs-on: [macos-13]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Bundler
+        run: |
+          bundle install
+      - name: Run SwiftLint
+        run: |
+          bundle exec fastlane run swiftlint
+  test:
+    name: Tests
+    runs-on: [macos-13]
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Bundler
+        run: |
+          bundle install
+      - name: Fastlane scan
+        run: |
+          bundle exec fastlane scan
+#  run_if:
+#    if: startsWith(github.base_ref, 'develop')
+#    name: archive
+#    runs-on: ${{ needs.lint.outputs.runner_name }}
+#    needs: [lint, generate, test]
+#    steps:
+#      - name: Archive as AdHoc
+#        run: |
+#          bundle exec fastlane run unlock_keychain
+#          bundle exec fastlane archive --env dev
+#

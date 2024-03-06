@@ -1,13 +1,13 @@
 import ComposableArchitecture
+import Dependencies
 import Domain
 
 @Reducer
 public struct ReminderDetailFeature {
-
     public init() {}
 
     @ObservableState
-    public struct State {
+    public struct State: Equatable {
         public var reminder: Reminder
 
         public init(reminder: Reminder) {
@@ -20,13 +20,16 @@ public struct ReminderDetailFeature {
             case completeButtonTapped
         }
 
+        @CasePathable
         public enum Delegate {
-            case reminderChanged(Reminder)
+            case onCompleteTapped(Reminder)
         }
 
         case view(ViewAction)
         case delegate(Delegate)
     }
+
+    @Dependency(\.date.now) var now
 
     public var body: some ReducerOf<Self> {
         Reduce { state, action in
@@ -34,13 +37,16 @@ public struct ReminderDetailFeature {
             case let .view(viewAction):
                 switch viewAction {
                 case .completeButtonTapped:
-                    state.reminder.isComplete.toggle()
-                    return .send(.delegate(.reminderChanged(state.reminder)))
+                    if state.reminder.completedDate != nil {
+                        state.reminder.completedDate = nil
+                    } else {
+                        state.reminder.completedDate = now
+                    }
+                    return .send(.delegate(.onCompleteTapped(state.reminder)))
                 }
             case .delegate:
                 return .none
             }
-
         }
     }
 }

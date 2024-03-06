@@ -3,154 +3,117 @@ import RemindersList
 import ReminderDetail
 import ReminderForm
 import Domain
+import Dependencies
+
+public enum Tab {
+    case allReminders
+    case completedReminders
+}
 
 @Reducer
 public struct AppFeature {
-
     public init() {}
 
     @ObservableState
     public struct State {
-        @Presents var destination: Destination.State? = nil
-        var path = StackState<PathFeature.State>()
-        var remindersList = RemindersListFeature.State()
+        var selectedTab: Tab = .allReminders
+        var allReminders = AllRemindersCoordinator.State()
+        var completedReminders = CompletedRemindersCoordinator.State()
 
-        public init(destination: Destination.State? = nil,
-             path: StackState<PathFeature.State> = StackState<PathFeature.State>(),
-             remindersList: RemindersListFeature.State = RemindersListFeature.State()) {
-            self.destination = destination
-            self.path = path
-            self.remindersList = remindersList
+        public init(
+            selectedTab: Tab = .allReminders,
+            allReminders: AllRemindersCoordinator.State = AllRemindersCoordinator.State(),
+            completedReminders: CompletedRemindersCoordinator.State = CompletedRemindersCoordinator.State()
+        ) {
+            self.selectedTab = selectedTab
+            self.allReminders = allReminders
+            self.completedReminders = completedReminders
         }
     }
 
-    public enum Action: ViewAction {
-        public enum ViewAction {
-            case addButtonTapped
-            case saveAddReminderTapped(Reminder)
-            case cancelAddReminderTapped
-            case editButtonTapped(Reminder)
-            case saveEditReminderTapped(Reminder)
-            case cancelEditReminderTapped
-        }
+    public enum Action: ViewAction, BindableAction {
+        public enum ViewAction {}
 
-        case destination(PresentationAction<Destination.Action>)
-        case path(StackAction<PathFeature.State, PathFeature.Action>)
-        case remindersList(RemindersListFeature.Action)
+        case allReminders(AllRemindersCoordinator.Action)
+        case completedReminders(CompletedRemindersCoordinator.Action)
         case view(ViewAction)
+        case binding(BindingAction<State>)
     }
+
+    @Dependency(\.remindersClient.save) var saveReminders
 
     public var body: some ReducerOf<Self> {
+        BindingReducer()
         Scope(
-          state: \.remindersList,
-          action: /Action.remindersList
+          state: \.allReminders,
+          action: \.allReminders
         ) {
-          RemindersListFeature()
+            AllRemindersCoordinator()
+        }
+        .onChange(of: \.allReminders.remindersList.reminders) { _, _ in
+            persistRemindersReducer()
         }
 
-        Reduce { state, action in
+        Scope(
+          state: \.completedReminders,
+          action: \.completedReminders
+        ) {
+          CompletedRemindersCoordinator()
+        }
+
+        Reduce<State, Action> { state, action in
             switch action {
-            case let .view(viewAction):
-                switch viewAction {
-                case .addButtonTapped:
-                    @Dependency(\.uuid) var uuid
-                    let newReminder = Reminder(id: uuid(), title: "", note: "")
-                    state.destination = .addReminder(ReminderFormFeature.State(reminder: newReminder))
-                    return .none
-                case let .saveAddReminderTapped(newReminder):
-                    state.remindersList.reminders.append(newReminder)
-                    state.destination = nil
-                    return .none
-                case .cancelAddReminderTapped:
-                    state.destination = nil
-                    return .none
-                case let .editButtonTapped(reminder):
-                    state.destination = .editReminder(ReminderFormFeature.State(reminder: reminder))
-                    return .none
-                case let .saveEditReminderTapped(editedReminder):
-                    state.remindersList.reminders[id: editedReminder.id] = editedReminder
-
-                    for (id, element) in zip(state.path.ids, state.path) {
-                        switch element {
-                        case .detail:
-                            state.path[id: id, case: \.detail]?.reminder = editedReminder
-                        }
+            case let .allReminders(.delegate(delegateAction)):
+                switch delegateAction {
+                case let .onReminderChanged(reminder):
+                    if state.completedReminders.remindersList.reminders[id: reminder.id] != nil {
+                        state.completedReminders.remindersList.reminders[id: reminder.id] = reminder
                     }
-
-                    state.destination = nil
                     return .none
-                case .cancelEditReminderTapped:
-                    state.destination = nil
+                case let .onCompleteTapped(reminder):
+                    if reminder.isCompleted {
+                        state.completedReminders.remindersList.reminders.insert(reminder, at: 0)
+                    } else {
+                        state.completedReminders.remindersList.reminders.remove(reminder)
+                    }
+                    return .none
+                case let .onDeleteTapped(ids):
+                    for id in ids {
+                        state.completedReminders.remindersList.reminders.remove(id: id)
+                    }
                     return .none
                 }
-            case let .remindersList(.delegate(.onReminderTapped(reminder))):
-                state.path.append(.detail(ReminderDetailFeature.State(reminder: reminder)))
+            case let .completedReminders(.delegate(delegateAction)):
+                switch delegateAction {
+                case let .onCompleteTapped(reminder):
+                    state.allReminders.remindersList.reminders[id: reminder.id] = reminder
+                    return .none
+                case let .onReminderChanged(reminder):
+                    state.allReminders.remindersList.reminders[id: reminder.id] = reminder
+                    return .none
+                case let .onDeleteTapped(ids):
+                    for id in ids {
+                        state.allReminders.remindersList.reminders.remove(id: id)
+                    }
+                    return .none
+                }
+            case .allReminders:
                 return .none
-            case .remindersList:
+            case .completedReminders:
                 return .none
-            case let .path(.element(id: _, action: .detail(.delegate(.reminderChanged(changedReminder))))):
-                state.remindersList.reminders[id: changedReminder.id] = changedReminder
-                return .none
-            case .path:
-                return .none
-            case .destination:
+            case .binding:
                 return .none
             }
         }
-        .forEach(\.path, action: \.path) {
-            PathFeature()
-          }
-        .ifLet(\.$destination, action: \.destination) {
-            Destination()
+        .onChange(of: \.allReminders.remindersList.reminders) { _, _ in
+            persistRemindersReducer()
         }
     }
-}
 
-extension AppFeature {
-    @Reducer
-    public struct Destination {
-        @ObservableState
-        public enum State {
-            case editReminder(ReminderFormFeature.State)
-            case addReminder(ReminderFormFeature.State)
-        }
-
-        public enum Action {
-            case editReminder(ReminderFormFeature.Action)
-            case addReminder(ReminderFormFeature.Action)
-        }
-
-        public var body: some ReducerOf<Self> {
-            Scope(state: \.editReminder, action: \.editReminder) {
-                ReminderFormFeature()
-            }
-            Scope(state: \.addReminder, action: \.addReminder) {
-                ReminderFormFeature()
-            }
-        }
-
-
-    }
-}
-
-extension AppFeature {
-    @Reducer
-    public struct PathFeature {
-
-        public init() {}
-
-        @ObservableState
-        public enum State {
-            case detail(ReminderDetailFeature.State)
-        }
-
-        public enum Action {
-            case detail(ReminderDetailFeature.Action)
-        }
-
-        public var body: some ReducerOf<Self> {
-            Scope(state: \.detail, action: \.detail) {
-                ReminderDetailFeature()
+    func persistRemindersReducer() -> some ReducerOf<Self> {
+        Reduce { state, _ in
+            .run { [reminders = state.allReminders.remindersList.reminders.elements] _ in
+                try saveReminders(reminders)
             }
         }
     }

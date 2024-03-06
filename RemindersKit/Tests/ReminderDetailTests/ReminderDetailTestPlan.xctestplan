@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "E4E290B0-76C3-4F3F-9821-30A7AC248BE0",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ReminderDetailTests",
+        "name" : "ReminderDetailTests"
+      }
+    }
+  ],
+  "version" : 1
+}

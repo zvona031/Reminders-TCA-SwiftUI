@@ -1,0 +1,45 @@
+{
+  "configurations" : [
+    {
+      "id" : "9D8902EF-E356-4711-B059-C0E1C09753BD",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "AppFeatureTests",
+        "name" : "AppFeatureTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ReminderDetailTests",
+        "name" : "ReminderDetailTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ReminderFormTests",
+        "name" : "ReminderFormTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "ReminderListTests",
+        "name" : "ReminderListTests"
+      }
+    }
+  ],
+  "version" : 1
+}
